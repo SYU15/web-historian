@@ -15,6 +15,7 @@ var actions = {
   'GET': function (request, response) {
     fs.readFile('/Users/HR10/Desktop/historian/web/archives/sites.json', {encoding: 'utf8'}, function (err, data) {
     sendResponse(response, data, 200);
+  });
   },
   'POST': function(request, response) {
     // console.log('data :'+data);
@@ -38,12 +39,19 @@ var actions = {
     request.on('end', function(){
         // console.log(requestBody);
       fs.readFile('/Users/HR10/Desktop/historian/web/archives/sites.json', {encoding: 'utf8'}, function (err, data) {
-        fileStuff += data;
+        fileStuff = data;
+        var parsedSites = JSON.parse(fileStuff);
+        var newData = JSON.parse(requestBody);
+        // console.log(fileStuff);
+        if(parsedSites['url'].indexOf(newData['url']) < 0) {
+          console.log('working');
+        } else {
+          console.log('still working');
+        }
+        sendResponse(response, 'sent', 201);
        });
-      var newData = JSON.parse(requestBody);
       console.log(requestBody);
-      console.log(fileStuff);
-        // var parsedSites = JSON.parse(fileStuff);
+      // console.log(fileStuff);
         // console.log(parsedSites);
         // if (parsedSites['url'].indexOf(newData) > 0) {
         //   console.log('not here');
@@ -52,8 +60,7 @@ var actions = {
         // }
         // console.log(newData);;
       // console.log(requestBody);
-      sendResponse(response, 'sent', 201);
-      response.end("Hello, world");
+      // response.end("Hello, world");
     });
   },
   'OPTIONS': function(request, response) {
