@@ -19,14 +19,14 @@ var sendResponse = function (response, data, statusCode) {
 // });
 var actions = {
   'GET': function (request, response) {
-    if(request.url.match('/')){
-      request.on('end', function () {
-        file.serve(request, response);
-        sendResponse(response, 'ok', 200);
-    });
-    } else {
+    // if(request.url.match('/')){
+    //   request.on('end', function () {
+    //     file.serve(request, response);
+    //     sendResponse(response, 'ok', 200);
+    // });
+    // } else {
       sendResponse(response, 'ok', 200);
-    }
+    // }
   },
   'POST': function(request, response) {
     // console.log('data :'+data);
