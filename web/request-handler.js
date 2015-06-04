@@ -2,6 +2,7 @@ var path = require('path');
 var archive = require('../helpers/archive-helpers');
 var request = require('request');
 var headers = require('./http-helpers.js');
+var fs = require('fs');
 // require more modules/folders here!
 
 var sendResponse = function (response, data, statusCode) {
@@ -12,22 +13,46 @@ var sendResponse = function (response, data, statusCode) {
 
 var actions = {
   'GET': function (request, response) {
-    sendResponse(response, 'hi', 200);
+    fs.readFile('/Users/HR10/Desktop/historian/web/archives/sites.json', {encoding: 'utf8'}, function (err, data) {
+    sendResponse(response, data, 200);
   },
   'POST': function(request, response) {
     // console.log('data :'+data);
     console.log('sending POST request');
     // collectData(request, function (message) {
-    //   console.log(data);
-    //   var newData
-    // })
+      // fs.readFile('/Users/HR10/Desktop/historian/web/archives/sites.txt', {encoding: 'utf8'}, function (err, data) {
+    //     console.log(data);
+    //     var newData = JSON.parse(data);
+    //     console.log(newData);
+    //     if (err) {
+    //       console.log('oh nah');
+    //     }
+    //   });
+
+    // })x
     var requestBody ='';
+    var fileStuff;
     request.on('data', function(data){
       requestBody += data;
     });
     request.on('end', function(){
+        // console.log(requestBody);
+      fs.readFile('/Users/HR10/Desktop/historian/web/archives/sites.json', {encoding: 'utf8'}, function (err, data) {
+        fileStuff += data;
+       });
+      var newData = JSON.parse(requestBody);
       console.log(requestBody);
-      sendResponse(response, requestBody, 201);
+      console.log(fileStuff);
+        // var parsedSites = JSON.parse(fileStuff);
+        // console.log(parsedSites);
+        // if (parsedSites['url'].indexOf(newData) > 0) {
+        //   console.log('not here');
+        // } else {
+        //   console.log('here');
+        // }
+        // console.log(newData);;
+      // console.log(requestBody);
+      sendResponse(response, 'sent', 201);
       response.end("Hello, world");
     });
   },
@@ -36,15 +61,15 @@ var actions = {
   }
 };
 
-// var collectData = function (request, callback) {
-//   var data = '';
-//   request.on('data', function (chunk) {
-//     data += chunk;
-//   });
-//   request.on('end', function() {
-//     callback(data);
-//   });
-// };
+var collectData = function (request, callback) {
+  var data = '';
+  request.on('data', function (chunk) {
+    data += chunk;
+  });
+  request.on('end', function() {
+    callback(data);
+  });
+};
 
 var requestHandler = function (request, response) {
   var action = actions[request.method];
