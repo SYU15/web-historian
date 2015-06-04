@@ -21,6 +21,7 @@
       type: 'POST',
       data: JSON.stringify(webLookupObj),
       contentType: 'application/json',
+      crossDomain: true,
       success: function (data) {
         console.log('webLookup sent');
       },

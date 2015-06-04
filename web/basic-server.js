@@ -6,7 +6,7 @@ var url = require("url");
 var path = require("path");
 var static = require("node-static");
 
-var file = new static.Server("/Users/HR10/Desktop/historian/web/public");
+var file = new static.Server("./web/public");
 
 // Why do you think we have this here?
 // HINT:It has to do with what's in .gitignore

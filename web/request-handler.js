@@ -10,12 +10,13 @@ var sendResponse = function (response, data, statusCode) {
   response.writeHead(statusCode, headers.headers);
   response.end(data);
 }
-
+// var text;
+// fs.readFile('web/text.txt', 'utf8', function (error, data) {
+//   console.log(data);
+// });
 var actions = {
   'GET': function (request, response) {
-    fs.readFile('/Users/HR10/Desktop/historian/web/archives/sites.json', {encoding: 'utf8'}, function (err, data) {
-    sendResponse(response, data, 200);
-  });
+    sendResponse(response, 'ok', 200);
   },
   'POST': function(request, response) {
     // console.log('data :'+data);
@@ -37,20 +38,27 @@ var actions = {
       requestBody += data;
     });
     request.on('end', function(){
+      console.log(requestBody)
         // console.log(requestBody);
-      fs.readFile('/Users/HR10/Desktop/historian/web/archives/sites.json', {encoding: 'utf8'}, function (err, data) {
+      fs.readFile('web/sites.json', {encoding: 'utf8'}, function (err, data) {
+        fileStuff = data;
+        console.log(fileStuff);
+        if(err){
+          console.log('error reading sites.json')
+        }
         fileStuff = data;
         var parsedSites = JSON.parse(fileStuff);
         var newData = JSON.parse(requestBody);
         // console.log(fileStuff);
         if(parsedSites['url'].indexOf(newData['url']) < 0) {
-          console.log('working');
+          console.log('new url, send to loading page');
         } else {
-          console.log('still working');
+          console.log('old url already loaded, send to archive');
         }
         sendResponse(response, 'sent', 201);
        });
-      console.log(requestBody);
+    // sendResponse(response, 'sent', 201);
+      // console.log(requestBody);
       // console.log(fileStuff);
         // console.log(parsedSites);
         // if (parsedSites['url'].indexOf(newData) > 0) {
@@ -64,7 +72,7 @@ var actions = {
     });
   },
   'OPTIONS': function(request, response) {
-    sendResponse(response);
+    sendResponse(response, 'ok');
   }
 };
 
