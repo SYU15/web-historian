@@ -32,6 +32,7 @@ describe("Node Server Request Listener Function", function() {
       function() { return res._ended; },
       function(){
         expect(res._responseCode).to.equal(200);
+        // console.log(res._data);
         expect(res._data.toString().match(/<input/)).to.be.ok; // the resulting html should have an input tag
         done();
     });
