@@ -3,7 +3,10 @@ var archive = require('../helpers/archive-helpers');
 var request = require('request');
 var headers = require('./http-helpers.js');
 var fs = require('fs');
+var static = require("node-static");
 // require more modules/folders here!
+
+var file = new static.Server("./web/public");
 
 var sendResponse = function (response, data, statusCode) {
   var statusCode = statusCode || 200;
@@ -16,7 +19,14 @@ var sendResponse = function (response, data, statusCode) {
 // });
 var actions = {
   'GET': function (request, response) {
-    sendResponse(response, 'ok', 200);
+    if(request.url.match('/')){
+      request.on('end', function () {
+        file.serve(request, response);
+        sendResponse(response, 'ok', 200);
+    });
+    } else {
+      sendResponse(response, 'ok', 200);
+    }
   },
   'POST': function(request, response) {
     // console.log('data :'+data);
@@ -40,13 +50,12 @@ var actions = {
     request.on('end', function(){
       console.log(requestBody)
         // console.log(requestBody);
-      fs.readFile('web/sites.json', {encoding: 'utf8'}, function (err, data) {
+      fs.readFile('web/archives/sites.json', {encoding: 'utf8'}, function (err, data) {
         fileStuff = data;
         console.log(fileStuff);
         if(err){
           console.log('error reading sites.json')
         }
-        fileStuff = data;
         var parsedSites = JSON.parse(fileStuff);
         var newData = JSON.parse(requestBody);
         // console.log(fileStuff);

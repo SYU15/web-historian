@@ -12,7 +12,7 @@ var _ = require('underscore');
 exports.paths = {
   'siteAssets' : path.join(__dirname, '../web/public'),
   'archivedSites' : path.join(__dirname, '../archives/sites'),
-  'list' : path.join(__dirname, '../archives/sites.json')
+  'list' : path.join(__dirname, '../archives/sites.txt')
 };
 
 // Used for stubbing paths for jasmine tests, do not modify
@@ -27,8 +27,7 @@ exports.initialize = function(pathsObj){
 
 var readListOfUrls = function(){
   var fileContents;
-  console.log(exports.paths['list']);
-  fs.readFile('web/archives/sites.json', {encoding: 'utf8'}, function (err, data){
+  fs.readFile('web/sites.json', {encoding: 'utf8'}, function (err, data){
     fileContents = data;
     // var jsonData = JSON.parse(fileContents);
   });
