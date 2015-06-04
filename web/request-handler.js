@@ -12,7 +12,7 @@ var sendResponse = function (response, data, statusCode) {
 
 var actions = {
   'GET': function (request, response) {
-    sendResponse(response, data, 200);
+    sendResponse(response, 'hi', 200);
   },
   'POST': function(request, response) {
     // console.log('data :'+data);
