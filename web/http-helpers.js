@@ -46,7 +46,11 @@ exports.serveAssets = function(res, asset, callback) {
     if(err){
       fs.readFile(archive.paths.archivedSites + asset, encoding, function(err, data){
         if (err){
-          if(callback){callback();} else {exports.send404(res);}
+          // if(callback){callback();} else {
+          //   console.log('here');
+          //   exports.send404(res);
+          // }
+          callback ? callback() : exports.send404(res);
         } else {
           exports.sendResponse(res, data);
         }

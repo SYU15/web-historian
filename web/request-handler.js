@@ -13,19 +13,27 @@ var file = new static.Server("./web/public");
 var actions = {
   'GET': function (request, response) {
     var parsedUrl = urlParser.parse(request.url);
-    console.log(parsedUrl);
+    // console.log(parsedUrl);
     if(parsedUrl.pathname === '/'){
       var urlPath = '/index.html';
     } else {
       var urlPath = parsedUrl.pathname;
     }
+    console.log(urlPath);
     utilities.serveAssets(response, parsedUrl, function() {
       archive.isUrlInList(urlPath.slice(1), function (found) {
+        // console.log(urlPath.slice(1));
         if (found) {
           //redirect to loading
           utilities.sendRedirect(response, '/loading.html');
         } else {
-          utilities.send404(response);
+          if(urlPath.slice(1) === 'index.html'){
+            console.log(true);
+            utilities.sendRedirect(response, '/index.html');
+          } else{
+            console.log('or here');
+            utilities.send404(response);
+          }
         }
       });
     });
