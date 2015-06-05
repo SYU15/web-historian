@@ -14,13 +14,7 @@ initialize();
 
 var port = 8080;
 var ip = "127.0.0.1";
-var server = http.createServer(function(request, response) {
-  handler.requestHandler(request, response);
-  response.addListener('end', function(request, response){
-    file.serve(request, response);
-
-  }).resume();
-});
+var server = http.createServer(handler.requestHandler);
 
 // http.createServer(function(request, response) {
 

@@ -12,7 +12,7 @@ var _ = require('underscore');
 exports.paths = {
   'siteAssets' : path.join(__dirname, '../web/public'),
   'archivedSites' : path.join(__dirname, '../archives/sites'),
-  'list' : path.join(__dirname, '../archives/sites.json')
+  'list' : path.join(__dirname, '../archives/sites.txt')
 };
 
 // Used for stubbing paths for jasmine tests, do not modify
@@ -25,26 +25,45 @@ exports.initialize = function(pathsObj){
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-var readListOfUrls = function(){
-  var fileContents;
-  console.log(exports.paths['list']);
-  fs.readFile('web/archives/sites.json', {encoding: 'utf8'}, function (err, data){
-    fileContents = data;
-    // var jsonData = JSON.parse(fileContents);
+exports.readListOfUrls = function(callback){
+
+  fs.readFile(exports.paths.list, function (err, sites){
+    sites = sites.toString().split('\n');
+    if(callback){
+      callback(sites);
+    }
   });
-  console.log(fileContents);
-  // return jsonData['url'];
 };
 
-readListOfUrls();
-exports.isUrlInList = function(){
+exports.isUrlInList = function(url, callback){
+  exports.readListOfUrls(function(sites){
+    var found = _.any(sites, function(site, i) {
+      return site.match(url);
+    });
+    callback(found);
+  });
 };
 
-exports.addUrlToList = function(){
+exports.addUrlToList = function(url, callback){
+  fs.appendFile(exports.paths.list, url+'\n', function(err, file){
+    callback();
+  });
 };
 
-exports.isURLArchived = function(){
+exports.isURLArchived = function(url, callback){
+  var sitePath = path.join(exports.paths.archivedSites, url);
+
+  fs.exists(sitePath, function(exists){
+    callback(exists);
+  });
 };
 
-exports.downloadUrls = function(){
+exports.downloadUrls = function(urls){
+  _.each(urls, function(url){
+    if(!url){
+      return;
+    }
+    request('http://' + url).pipe(fs.createWriteStream(exports.paths.archivedSites + '/' + url));
+  });
+  return true;
 };
